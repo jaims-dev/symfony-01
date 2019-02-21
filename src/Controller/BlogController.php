@@ -14,6 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class BlogController
+ * @package App\Controller
+ *
+ * @Route("/blog")
+ */
+
 class BlogController extends AbstractController
 {
     /**
@@ -27,14 +34,16 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/", name="blog_index")
+     * @Route("/{name}", name="blog_index")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(Request $request)
+    public function index($name)
     {
+//        return $this->render('base.html.twig',
+//            ['message' => $this->greeting->greet($request->get('name'))]);
         return $this->render('base.html.twig',
-            ['message' => $this->greeting->greet($request->get('name'))]);
+            ['message' => $this->greeting->greet($name)]);
     }
 
 }
