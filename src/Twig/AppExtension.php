@@ -10,11 +10,17 @@ namespace App\Twig;
 
 
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 
-class AppExtension extends AbstractExtension
+class AppExtension extends AbstractExtension implements GlobalsInterface
 {
+    private $locale;
 
+    public function __construct(string $locale)
+    {
+        $this->locale = $locale;    // See services.yaml
+    }
 
     public function getFilters()
     {
@@ -26,5 +32,17 @@ class AppExtension extends AbstractExtension
     public function priceFilter($price)
     {
         return '$'.number_format($price, '2', '.', ',');
+    }
+
+    /**
+     * Returns a list of global variables to add to the existing list.
+     *
+     * @return array An array of global variables
+     */
+    public function getGlobals()
+    {
+        return [
+            'locale' => $this->locale,
+        ];
     }
 }

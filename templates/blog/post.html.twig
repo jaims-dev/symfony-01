@@ -4,6 +4,7 @@
     Blog post {{ post.title }}
 {% endblock %}
 {% block body %}
+    {#{{ dump() }}#}
     <h3>
         {{ post.title }}
     </h3>
@@ -11,4 +12,14 @@
     {{ post.text }}
     </p>
     <a href="{{ path('blog_index') }}">Index</a>
+    <p>Current lang from global variable: <strong>{{ locale }}</strong> (look into Services.yaml)</p>
+    <p>Another way to retrieve globals: <strong>{{ hello_message }}</strong> (look into Services.yaml and twig.yaml)</p>
+    <h4>Some provided global vars:</h4>
+    <ul>
+        <li>Env: {{ app.environment }}</li>
+        <li>User: {{ app.user }}</li>
+        <li>Request: {{ app.request }}</li>
+        <li>Session started: {{ app.session.isStarted() }}</li>
+        <li>Debug: {{ app.debug }}</li>
+    </ul>
 {% endblock %}

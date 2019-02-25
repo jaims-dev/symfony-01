@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    hello_message: "Autobús"
+    hello_message: 'Autobus'
 
 services:
     # default configuration for services in *this* file
@@ -31,6 +31,9 @@ services:
 #    App\Service\Greeting:
 #        arguments:
 #            $message: '%hello_message%'
+    App\Twig\AppExtension:
+        arguments:
+            $locale: '%locale%'
 
 #    App\Controller\BlogController: ['@App\Service\Greeting']
 #    App\Service\Greeting: ['@monolog.logger']
