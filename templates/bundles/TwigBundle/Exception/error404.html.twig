@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {#{{ dump() }}#}
+    <h2>Oh, snap!</h2>
+    <p>Ooopps! Couln't find the page you just requested :-(</p>
+    <p>{{ status_code }}: {{ status_text }}</p>
+{% endblock %}

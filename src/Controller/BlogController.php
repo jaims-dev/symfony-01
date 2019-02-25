@@ -46,6 +46,7 @@ class BlogController extends AbstractController
      */
     public function index()
     {
+//        $this->session->invalidate();
         return $this->render('blog/index.html.twig', [
             'posts' => $this->session->get('posts')
         ]);
@@ -60,6 +61,7 @@ class BlogController extends AbstractController
         $posts[uniqid()] = [
             'title' => 'A random title '.rand(1, 500),
             'text' => 'A random text '.rand(1, 500),
+            'price' => rand(20,100),
         ];
         $this->session->set('posts', $posts);
         return $this->redirectToRoute('blog_index');
