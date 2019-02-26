@@ -40,7 +40,7 @@ class MicroPostController
     }
 
     /**
-     * @Route("/", "micro_post_index")
+     * @Route("/", name="micro_post_index")
      */
     public function index()
     {
