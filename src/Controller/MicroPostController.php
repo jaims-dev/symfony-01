@@ -108,4 +108,19 @@ class MicroPostController
         );
     }
 
+    /**
+     * @Route("/{id}", name="micro_post_post")
+     */
+//    public function post($id)
+    public function post(MicroPost $post) // Here we use Symfony's feature called param converter
+    {
+//        $post = $this->microPostRepository->find($id); // param converter probably does this internally
+        return new Response(
+            $this->twig->render(
+                'micro-post/post.html.twig',
+                ['post' => $post]
+            )
+        );
+    }
+
 }
