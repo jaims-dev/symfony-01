@@ -72,8 +72,12 @@ class MicroPostController
      */
     public function index()
     {
+//        $html = $this->twig->render('micro-post/index.html.twig', [
+//            'posts' => $this->microPostRepository->findAll()
+//        ]);
+
         $html = $this->twig->render('micro-post/index.html.twig', [
-            'posts' => $this->microPostRepository->findAll()
+            'posts' => $this->microPostRepository->findBy([], ['time' => 'DESC'])
         ]);
 
         return new Response($html);
@@ -119,6 +123,33 @@ class MicroPostController
             $this->twig->render(
                 'micro-post/post.html.twig',
                 ['post' => $post]
+            )
+        );
+    }
+
+    /**
+     * @Route("/edit/{id}", name="micro_post_edit")
+     */
+    public function edit(MicroPost $post, Request $request)
+    {
+        $form = $this->formFactory->create(
+            MicroPostType::class,
+            $post
+        );
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+//            $this->entityManager->persist($post); // Needed to create new posts, not for editing them
+            $this->entityManager->flush();
+
+            return new RedirectResponse($this->router->generate('micro_post_index'));
+        }
+
+
+        return new Response(
+            $this->twig->render(
+                'micro-post/add.html.twig',
+                ['form' => $form->createView()]
             )
         );
     }
