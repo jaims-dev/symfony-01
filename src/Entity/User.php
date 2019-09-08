@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields="email", message="This email is already in use")
+ * @UniqueEntity(fields="username", message="This username is already in use")
  */
 class User implements UserInterface, Serializable
 {
@@ -20,6 +24,7 @@ class User implements UserInterface, Serializable
 
     /**
      * @ORM\Column(type="string", length=50, unique=true)
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -93,12 +98,37 @@ class User implements UserInterface, Serializable
     private $password;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Email()
      */
     private $mail;
 
     /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+    /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(min=4, max=50)
      */
 
     private $fullname;
@@ -159,10 +189,11 @@ class User implements UserInterface, Serializable
      */
     public function serialize()
     {
-        $this->serialize(
-            $this->id,
-            $this->username,
-            $this->password
+        return serialize([
+                $this->id,
+                $this->username,
+                $this->password
+            ]
         );
     }
 

@@ -3,12 +3,29 @@
 namespace App\DataFixtures;
 
 use App\Entity\MicroPost;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    public function load(ObjectManager $manager) {
+        $this->loadMicroPosts($manager);
+        $this->loadUsers($manager);
+    }
+
+    private function loadMicroPosts(ObjectManager $manager)
     {
         // Lets create 10 entities to db
 
@@ -21,6 +38,18 @@ class AppFixtures extends Fixture
             $microPost->setTime(new \DateTime());
             $manager->persist($microPost);
         }
+        $manager->flush();
+    }
+
+    private function loadUsers(ObjectManager $manager)
+    {
+        $user = new User();
+        $user->setFullname('John Doe');
+        $user->setUsername('john');
+        $user->setPassword($this->passwordEncoder->encodePassword($user, 'doe'));
+        $user->setMail('johndoe@doe.com');
+
+        $manager->persist($user);
         $manager->flush();
     }
 }

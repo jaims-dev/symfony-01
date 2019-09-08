@@ -43,6 +43,7 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
     {
         return [
             'locale' => $this->locale,
+            'foobarz' => 'foobarz',
         ];
     }
 }

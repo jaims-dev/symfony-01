@@ -5,5 +5,6 @@ twig:
 
     globals:
         hello_message: '%hello_message%'
+        ayaya: 'ayaya'
 
     form_themes: ['bootstrap_4_layout.html.twig']

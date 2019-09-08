@@ -12,7 +12,11 @@
     <div class="my-3 p-3 bg-white rounded box-shadow">
         {% block body %}
         {% endblock %}
+        <small class="d-block text-right mt-3">
+            <a href="#">All updates</a>
+        </small>
     </div>
+
 </main>
 {% block javascripts %}
     <script src="{{ asset('build/js/app.js') }}"></script>

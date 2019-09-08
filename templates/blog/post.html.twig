@@ -21,5 +21,7 @@
         <li>Request: {{ app.request }}</li>
         <li>Session started: {{ app.session.isStarted() }}</li>
         <li>Debug: {{ app.debug }}</li>
+        <li>Foobarz: {{ foobarz }} (see AppExtension.php file, GlobalsInterface implementation)</li>
+        <li>Ayaya: {{ ayaya }} (see twig.yaml file, globals section)</li>
     </ul>
 {% endblock %}

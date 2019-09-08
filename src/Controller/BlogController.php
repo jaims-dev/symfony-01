@@ -12,15 +12,16 @@ namespace App\Controller;
 use App\Service\Greeting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 /**
  * Class BlogController
  * @package App\Controller
- *
- * @Route("/blog")
+ * @Route("blog")
  */
 
 class BlogController extends AbstractController
@@ -33,10 +34,15 @@ class BlogController extends AbstractController
      * @var SessionInterface
      */
     private $session;
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(\Twig_Environment $twig, SessionInterface $session)
     {
         $this->session = $session;
+        $this->twig = $twig;
     }
 
     /**
