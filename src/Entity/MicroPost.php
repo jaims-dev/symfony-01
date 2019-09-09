@@ -31,6 +31,29 @@ class MicroPost
 
 
 
+    // inversedBy: since we want to retrieve 'all posts by user', we need this inversed by.
+    // It is complemented by a var $posts in App\Entity\User with the necessary ORM annotation
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
+     * @ORM\JoinColumn()
+     */
+    private $user;
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
 
     public function getId(): ?int
     {
