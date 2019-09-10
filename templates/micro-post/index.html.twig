@@ -12,8 +12,12 @@
             {{ include('micro-post/raw-post.html.twig', {'post': post}) }}
         </a>
         <small class="d-block text-right mt-3">
+            {% if is_granted('edit', post) %}
             <a href="{{ path('micro_post_edit', {'id': post.id}) }}">Edit</a>
+            {% endif %}
+            {% if is_granted('delete', post) %}
             <a href="{{ path('micro_post_delete', {'id': post.id}) }}">Delete</a>
+            {% endif %}
         </small>
     {% endfor %}
 {% endblock %}

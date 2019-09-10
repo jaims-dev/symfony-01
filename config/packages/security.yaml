@@ -1,4 +1,6 @@
 security:
+    access_decision_manager:
+        strategy: affirmative # unanimous, consensus being affirmative the default and hence should not be necessary in this case
     encoders:
         App\Entity\User: bcrypt
 

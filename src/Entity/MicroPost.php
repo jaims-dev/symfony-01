@@ -40,7 +40,7 @@ class MicroPost
     private $user;
 
     /**
-     * @return mixed
+     * @return User
      */
     public function getUser()
     {

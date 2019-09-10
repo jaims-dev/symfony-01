@@ -15,13 +15,16 @@ use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class MicroPostController
@@ -56,6 +59,10 @@ class MicroPostController
      * @var FlashBagInterface
      */
     private $flashBag;
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
 
     // Autowiring here!
     public function __construct(
@@ -64,14 +71,16 @@ class MicroPostController
         FormFactoryInterface $formFactory,
         EntityManagerInterface $entityManager,
         RouterInterface $router,
-        FlashBagInterface $flashBag)
-    {
+        FlashBagInterface $flashBag,
+        AuthorizationCheckerInterface $authorizationChecker
+    ) {
         $this->twig = $twig;
         $this->microPostRepository = $microPostRepository;
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->flashBag = $flashBag;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -137,16 +146,26 @@ class MicroPostController
     /**
      * @Route("/edit/{id}", name="micro_post_edit")
      */
-    public function edit(MicroPost $post, Request $request)
+    public function edit(MicroPost $microPost, Request $request)
     {
+
+        /*
+        if we were extending AbstractController:
+        $this->denyAccessUnlessGranted(...)
+
+        We could also use the annotation @Security("is_granted('edit', post)", message="Acces denied")
+        */
+        if (!$this->authorizationChecker->isGranted('edit', $microPost)) {
+            throw new UnauthorizedHttpException("Unauthorized operation");
+        }
         $form = $this->formFactory->create(
             MicroPostType::class,
-            $post
+            $microPost
         );
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-//            $this->entityManager->persist($post); // Needed to create new posts, not for editing them
+//            $this->entityManager->persist($microPost); // Needed to create new posts, not for editing them
             $this->entityManager->flush();
 
             return new RedirectResponse($this->router->generate('micro_post_index'));
@@ -163,9 +182,18 @@ class MicroPostController
 
     /**
      * @Route("/delete/{id}", name="micro_post_delete")
+     * @Security("is_granted('edit', microPost)", message="Acces denied")
      */
-    public function delete(Micropost $post) {
-        $this->entityManager->remove($post);
+    public function delete(Micropost $microPost) {
+        /* if we were extending AbstractController:
+            $this->denyAccessUnlessGranted(...)
+
+            We could also use the annotation @Security("is_granted('edit', post)", message="Acces denied")
+        */
+        if (!$this->authorizationChecker->isGranted('edit', $microPost)) {
+            throw new UnauthorizedHttpException("Unauthorized operation");
+        }
+        $this->entityManager->remove($microPost);
         $this->entityManager->flush();
         $this->flashBag->add('notice', 'The micropost was deleted!');
 
