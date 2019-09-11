@@ -43,7 +43,7 @@ class MicroPostVoter extends Voter
         if($this->accessDecisionManager->decide($token, [USER::ROLE_ADMIN])) {
             return true;
         }
-        
+
         $authenticatedUser = $token->getUser();
         if(!$authenticatedUser instanceof User) {
             return false;

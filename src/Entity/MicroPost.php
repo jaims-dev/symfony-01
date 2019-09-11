@@ -35,7 +35,8 @@ class MicroPost
     // It is complemented by a var $posts in App\Entity\User with the necessary ORM annotation
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
-     * @ORM\JoinColumn()
+     * @ORM\JoinColumn(nullable=false)
+     *
      */
     private $user;
 

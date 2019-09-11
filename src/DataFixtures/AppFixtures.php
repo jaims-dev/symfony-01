@@ -26,9 +26,9 @@ class AppFixtures extends Fixture
             'roles' => [USER::ROLE_USER],
         ],
         [
-            'username' => 'marry_gold',
+            'username' => 'admin',
             'email' => 'marry_gold@gold.com',
-            'password' => 'marry12345',
+            'password' => 'admin',
             'fullName' => 'Marry Gold',
             'roles' => [USER::ROLE_ADMIN],
         ],
