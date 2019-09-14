@@ -23,6 +23,9 @@ class User implements UserInterface, Serializable
     {
         // $this->posts is a doctrine thing, needs to get declared
         $this->posts = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->following = new ArrayCollection();
+
     }
 
     /**
@@ -31,6 +34,25 @@ class User implements UserInterface, Serializable
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="following")
+     */
+    private $followers;
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="followers")
+     * @ORM\JoinTable(name="following",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="following_user_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    private $following;
 
 
     // because of the annotation 'ManyToOne::inversedBy' (in \App\Entity\MicroPost::$user), used to retrieve all posts by a given user
@@ -251,5 +273,21 @@ class User implements UserInterface, Serializable
         list($this->id,
             $this->username,
             $this->password) = unserialize($serialized);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFollowers()
+    {
+        return $this->followers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFollowing()
+    {
+        return $this->following;
     }
 }
