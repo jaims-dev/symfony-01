@@ -136,8 +136,9 @@ class MicroPostController
      * @Route("user/{username}", name="micro_post_user")
      */
     public function userPosts(User $user) {
-        $html = $this->twig->render('micro-post/index.html.twig', [
-            'posts' => $this->microPostRepository->findBy(['user' => $user], ['time' => 'DESC'])
+        $html = $this->twig->render('micro-post/user-posts.html.twig', [
+            'posts' => $this->microPostRepository->findBy(['user' => $user], ['time' => 'DESC']),
+            'user' => $user
 //            'posts' => $user->getPosts() // works too, but unordered; but it uses the doctrine generated proxy class that has lazy-loading capabilities
         ]);
 
