@@ -284,7 +284,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getFollowing()
     {
