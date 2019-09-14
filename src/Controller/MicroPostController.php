@@ -108,7 +108,7 @@ class MicroPostController
     {
         $user = $tokenStorage->getToken()->getUser();
         $microPost = new MicroPost();
-        $microPost->setTime(new \DateTime());
+//        $microPost->setTime(new \DateTime());
         $microPost->setUser($user);
         $form = $this->formFactory->create(
             MicroPostType::class,
