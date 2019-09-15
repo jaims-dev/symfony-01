@@ -20,6 +20,14 @@ class MicroPostRepository extends ServiceEntityRepository
         parent::__construct($registry, MicroPost::class);
     }
 
+    /**
+     * @param Collection $users
+     * @return mixed
+     *
+     * Doctrine somehows instantiates stuff on its own; User::following is not an ArrayCollection
+     * (as we set in __construct) but a PersistenCollection (db). Both implement the
+     * Collection interface, therefore the arg for findAllByUsers must be a Collection
+     */
     public function findAllByUsers(Collection $users) {
         $qb = $this->createQueryBuilder('p');
         return $qb->select('p')

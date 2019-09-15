@@ -22,6 +22,10 @@ class User implements UserInterface, Serializable
     public function __construct()
     {
         // $this->posts is a doctrine thing, needs to get declared
+        
+        // Doctrine somehows instantiates stuff on its own; User::following is not an ArrayCollection
+        // (as we set in __construct) but a PersistenCollection (db). Both implement the
+        // Collection interface, therefore the arg for findAllByUsers must be a Collection
         $this->posts = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
