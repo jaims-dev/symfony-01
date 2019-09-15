@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -87,16 +86,21 @@ class MicroPostController
     /**
      * @Route("/", name="micro_post_index")
      */
-    public function index()
+    public function index(TokenStorageInterface $tokenStorage)
     {
-//        $html = $this->twig->render('micro-post/index.html.twig', [
-//            'posts' => $this->microPostRepository->findAll()
-//        ]);
+        $currentUser = $tokenStorage->getToken()->getUser();
+        if ($currentUser instanceof User ){
+            $following = $currentUser->getFollowing();
+            $following->add($currentUser);
+            $posts = $this->microPostRepository->findAllByUsers($following);
+
+        } else {
+            $posts = $this->microPostRepository->findBy([], ['time' => 'DESC']);
+        }
 
         $html = $this->twig->render('micro-post/index.html.twig', [
-            'posts' => $this->microPostRepository->findBy([], ['time' => 'DESC'])
+            'posts' => $posts
         ]);
-
         return new Response($html);
     }
 
