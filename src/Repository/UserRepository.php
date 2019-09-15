@@ -19,32 +19,27 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+    public function findAllWithMoreThan5Posts() {
+        return $this->findAllWithMoreThan5PostsQuery()
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
+    public function findAllWithMoreThan5PostsExceptUser(User $user) {
+        return $this->findAllWithMoreThan5PostsQuery()
+            ->andHaving('u != :user')
+            ->setParameter('user', $user)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
+
     }
-    */
+
+    public function findAllWithMoreThan5PostsQuery() {
+        $qb = $this->createQueryBuilder('u');
+
+        return $qb->select('u')
+            ->innerJoin('u.posts', 'mp')
+            ->groupBy('u')
+            ->having('count(mp) > 5');
+    }
 }
