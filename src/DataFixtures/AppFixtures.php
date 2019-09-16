@@ -12,26 +12,34 @@ class AppFixtures extends Fixture
 {
     private const USERS = [
         [
-            'username' => 'john_doe',
+            'username' => 'john',
             'email' => 'john_doe@doe.com',
-            'password' => 'john123',
+            'password' => 'john',
             'fullName' => 'John Doe',
             'roles' => [USER::ROLE_USER],
         ],
         [
-            'username' => 'rob_smith',
+            'username' => 'rob',
             'email' => 'rob_smith@smith.com',
-            'password' => 'rob12345',
+            'password' => 'rob',
             'fullName' => 'Rob Smith',
             'roles' => [USER::ROLE_USER],
         ],
         [
-            'username' => 'admin',
+            'username' => 'marry',
             'email' => 'marry_gold@gold.com',
-            'password' => 'admin',
+            'password' => 'marry',
             'fullName' => 'Marry Gold',
+            'roles' => [USER::ROLE_USER],
+        ],
+        [
+            'username' => 'admin',
+            'email' => 'admin@gold.com',
+            'password' => 'admin',
+            'fullName' => 'Admin Ister',
             'roles' => [USER::ROLE_ADMIN],
         ],
+
     ];
 
     private const POST_TEXT = [

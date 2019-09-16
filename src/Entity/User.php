@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -29,7 +30,7 @@ class User implements UserInterface, Serializable
         $this->posts = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
-
+        $this->postsLiked = new ArrayCollection();
     }
 
     /**
@@ -57,6 +58,11 @@ class User implements UserInterface, Serializable
      * )
      */
     private $following;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\MicroPost", mappedBy="likedBy")
+     */
+    private $postsLiked;
 
 
     // because of the annotation 'ManyToOne::inversedBy' (in \App\Entity\MicroPost::$user), used to retrieve all posts by a given user
@@ -300,5 +306,13 @@ class User implements UserInterface, Serializable
             return;
         }
         $this->getFollowing()->add($userToFollow);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPostsLiked()
+    {
+        return $this->postsLiked;
     }
 }
