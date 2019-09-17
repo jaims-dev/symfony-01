@@ -35,6 +35,10 @@ services:
         arguments:
             $locale: '%locale%'
 
+    App\EventListener\LikeNotificationSubscriber    :
+        tags:
+            - {name: doctrine.event_subscriber, connection: default}
+
 #    App\Controller\BlogController: ['@App\Service\Greeting']
 #    App\Service\Greeting: ['@monolog.logger']
 
