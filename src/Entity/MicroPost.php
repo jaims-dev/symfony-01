@@ -129,10 +129,10 @@ class MicroPost
         if($this->likedBy->contains($user)){
             return;
         }
-        $this->likedBy.add($user);
+        $this->likedBy->add($user);
     }
 
     public function unlike(User $user) {
-        $this->likedBy->remove($user);
+        $this->likedBy->remove($user->getId());
     }
 }
