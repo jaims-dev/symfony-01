@@ -10,6 +10,21 @@ class UserSubscriber implements EventSubscriberInterface
 {
 
     /**
+     * @var \Swift_mailer
+     */
+    private $mailer;
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig)
+    {
+        $this->mailer = $mailer;
+        $this->twig = $twig;
+    }
+
+    /**
      * Returns an array of event names this subscriber wants to listen to.
      *
      * The array keys are event names and the value can be:
@@ -35,6 +50,15 @@ class UserSubscriber implements EventSubscriberInterface
     }
 
     public function onUserRegister(UserRegisterEvent $event) {
-//        $event->getRegisteredUser();
+        $body = $this->twig->render('email/registration.html.twig', [
+            'user' => $event->getRegisteredUser()
+        ]);
+        $message = (new \Swift_Message())
+            ->setFrom('micropost@micropost.com')
+            ->setTo($event->getRegisteredUser()->getMail())
+            ->setSubject('Welcome to the micro-post app!')
+            ->setBody($body, 'text/html');
+
+        $this->mailer->send($message);
     }
 }
