@@ -2,10 +2,17 @@
 
 {% block body %}
     <div class="card">
+        {% if notifications | length %}
         <div class="card-body">
             <h5>Unread notifications</h5>
         </div>
-        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a href="{{ path('notification_acknowledge_all') }}"
+                   class="btn btn-block btn-link btn-outline-info">
+                    Mark 'em all as read
+                </a>
+            </li>
+            <ul class="list-group list-group-flush">
             {% for notification in notifications %}
                 <li class="list-group-item">
                     {% if notification is like %}
@@ -13,9 +20,18 @@
                         likes your
                         <a href="{{ path('micro_post_post', {'id':  notification.microPost.id }) }}">post</a>
                         {{ notification.microPost.text | slice(0,25) }}
+                        <a href="{{ path('notification_acknowledge', {'id':  notification.id }) }}"
+                           class="btn btn-sm btn-primary float-right">
+                            Mark read
+                        </a>
                     {% endif %}
                 </li>
             {% endfor %}
         </ul>
+        {% else %}
+            <div class="card-body">
+                <h5>No unread notifications</h5>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
