@@ -1,3 +1,11 @@
 swiftmailer:
     url: '%env(MAILER_URL)%'
     spool: { type: 'memory' }
+
+#    spool:
+#        type: file
+#        path: '%kernel.project_dir%/var/spool'
+
+#above configuration leaves mails as files in that spool dir
+#can be sent by issuing the command (cron job for instance):
+# bin/console switfmailer:spool:send --env=prod --message-limit=10
