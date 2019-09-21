@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if user %}
+    <h5>Congratulations</h5>
+    <p>
+        Account confirmed.
+        You can now proceed to use the app <a href="{{ path('security_login') }}">from here</a>
+    </p>
+    {% else %}
+        <h5>Error</h5>
+        <p>Something went wrong :-(</p>
+    {% endif %}
+{% endblock %}

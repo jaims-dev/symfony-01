@@ -40,6 +40,6 @@ class UserRepository extends ServiceEntityRepository
         return $qb->select('u')
             ->innerJoin('u.posts', 'mp')
             ->groupBy('u')
-            ->having('count(mp) > 5');
+            ->having('count(mp) >= 3');
     }
 }
