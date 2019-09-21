@@ -4,6 +4,7 @@
 namespace App\Event;
 
 
+use App\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserSubscriber implements EventSubscriberInterface
@@ -18,10 +19,10 @@ class UserSubscriber implements EventSubscriberInterface
      */
     private $twig;
 
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig)
+    public function __construct(Mailer $mailer)
     {
+
         $this->mailer = $mailer;
-        $this->twig = $twig;
     }
 
     /**
@@ -50,15 +51,7 @@ class UserSubscriber implements EventSubscriberInterface
     }
 
     public function onUserRegister(UserRegisterEvent $event) {
-        $body = $this->twig->render('email/registration.html.twig', [
-            'user' => $event->getRegisteredUser()
-        ]);
-        $message = (new \Swift_Message())
-            ->setFrom('micropost@micropost.com')
-            ->setTo($event->getRegisteredUser()->getMail())
-            ->setSubject('Welcome to the micro-post app!')
-            ->setBody($body, 'text/html');
-
-        $this->mailer->send($message);
+        $this->mailer->sendConfirmationEmail($event->getRegisteredUser());
     }
+
 }
