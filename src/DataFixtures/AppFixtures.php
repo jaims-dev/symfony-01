@@ -51,7 +51,17 @@ class AppFixtures extends Fixture
         'I need to go to the doctor',
         'What are you up to today?',
         'Did you watch the game yesterday?',
-        'How was your day?'
+        'How was your day?',
+        'ayaya ayaya ayaya',
+        'ayaya ayaya uyuyu',
+        'ayaya uyuyu ayaya',
+        'yuuuyu ayaya ayaya',
+        'yuuuyu asdfayaya ayaya',
+        'yuuufdsf a ayaya',
+        'yuuuy asdf asdfffffffffffff aayaya',
+        'yuuuyu jkjkjkjk jkjkjkj   ss',
+        'yuuuyu ayaya ayaya ayaya ayayaayaya ayaya ayaya ayaya',
+
     ];
 
     /**
@@ -99,6 +109,8 @@ class AppFixtures extends Fixture
             $user->setPassword($this->passwordEncoder->encodePassword($user, $userData['password']));
             $user->setMail($userData['email']);
             $user->setRoles($userData['roles']);
+            $user->setEnabled(true);
+
 
             $this->addReference($userData['username'], $user);
 

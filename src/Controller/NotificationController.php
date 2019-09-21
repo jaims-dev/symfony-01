@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Notification;
 use App\Repository\NotificationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,13 +20,54 @@ use Symfony\Component\Routing\Annotation\Route;
 class NotificationController extends AbstractController
 {
     /**
+     * @var NotificationRepository
+     */
+    private $notificationRepository;
+
+    public function __construct(NotificationRepository $notificationRepository) {
+
+        $this->notificationRepository = $notificationRepository;
+    }
+    /**
      * @Route("/unread-count", name="notification_unread")
      */
-    public function unreadCount(NotificationRepository $notificationRepository) { // no need to pass user, it is current user
+    public function unreadCount() { // no need to pass user, it is current user
 
         return new JsonResponse([
-            'count' => $notificationRepository->findUnseenByUser($this->getUser())
+            'count' => $this->notificationRepository->findUnseenByUser($this->getUser())
         ]);
+    }
+
+    /**
+     * @Route("/all", name="notification_all")
+     */
+    public function notifications() {
+        return $this->render(
+            "notification/notifications.html.twig", [
+                "notifications" => $this->notificationRepository->findBy([
+                    'seen' => false,
+                    'user' => $this->getUser()
+                ])
+        ]);
+    }
+
+    /**
+     * @param Notification $notification
+     * @Route("acknowledge/{id}", name="notification_acknowledge")
+     */
+    public function acknowledge(Notification $notification) {
+        $notification->setSeen(true);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('notification_all');
+    }
+
+    /**
+     * @Route("/acknoledge-all", name="notification_acknowledge_all")
+     */
+    public function acknowledgeAll() {
+        $this->notificationRepository->markAllAsReadByUser($this->getUser());
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('notification_all');
     }
 
 }

@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields="mail", message="This email is already in use")
  * @UniqueEntity(fields="username", message="This username is already in use")
  */
-class User implements UserInterface, Serializable
+class User implements AdvancedUserInterface, Serializable
 {
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -23,7 +23,7 @@ class User implements UserInterface, Serializable
     public function __construct()
     {
         // $this->posts is a doctrine thing, needs to get declared
-        
+
         // Doctrine somehows instantiates stuff on its own; User::following is not an ArrayCollection
         // (as we set in __construct) but a PersistenCollection (db). Both implement the
         // Collection interface, therefore the arg for findAllByUsers must be a Collection
@@ -31,6 +31,7 @@ class User implements UserInterface, Serializable
         $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
         $this->postsLiked = new ArrayCollection();
+        $this->roles = [self::ROLE_USER];
     }
 
     /**
@@ -58,6 +59,16 @@ class User implements UserInterface, Serializable
      * )
      */
     private $following;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, length=30)
+     */
+    private $confirmationToken;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enabled;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\MicroPost", mappedBy="likedBy")
@@ -224,7 +235,8 @@ class User implements UserInterface, Serializable
     /**
      * @param array $roles
      */
-    public function setRoles($roles) {
+    public function setRoles($roles)
+    {
         $this->roles = $roles;
     }
 
@@ -264,7 +276,8 @@ class User implements UserInterface, Serializable
         return serialize([
                 $this->id,
                 $this->username,
-                $this->password
+                $this->password,
+                $this->enabled
             ]
         );
     }
@@ -282,7 +295,9 @@ class User implements UserInterface, Serializable
     {
         list($this->id,
             $this->username,
-            $this->password) = unserialize($serialized);
+            $this->password,
+            $this->enabled
+            ) = unserialize($serialized);
     }
 
     /**
@@ -301,8 +316,9 @@ class User implements UserInterface, Serializable
         return $this->following;
     }
 
-    public function follow($userToFollow) {
-        if($this->getFollowing()->contains($userToFollow)) {
+    public function follow($userToFollow)
+    {
+        if ($this->getFollowing()->contains($userToFollow)) {
             return;
         }
         $this->getFollowing()->add($userToFollow);
@@ -314,5 +330,58 @@ class User implements UserInterface, Serializable
     public function getPostsLiked()
     {
         return $this->postsLiked;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * @param mixed $confirmationToken
+     */
+    public function setConfirmationToken($confirmationToken): void
+    {
+        $this->confirmationToken = $confirmationToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param mixed $enabled
+     */
+    public function setEnabled($enabled): void
+    {
+        $this->enabled = $enabled;
+    }
+
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->getEnabled();
     }
 }
