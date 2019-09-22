@@ -10,6 +10,7 @@
     {% endblock %}
 </head>
 <body class="bg-light">
+
 <nav class="navbar navbar-dark navbar-expand-md sticky-top bg-dark p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0"
        href="{{ path('micro_post_index') }}">Micro Post App</a>
@@ -17,17 +18,20 @@
         <ul class="navbar-nav px-3">
             {% if is_granted('ROLE_USER') %}
                 <li class="nav-item text-nowrap">
-                    <a class="nav-link" href="{{ path('micro_post_add') }}">Add new</a>
+                    <a class="nav-link" href="{{ path('micro_post_add') }}">
+                        {{ 'Add new'|trans }}
+                    </a>
                 </li>
             {% endif %}
         </ul>
     </div>
+
     <div class="order-2 order-md-1">
         <ul class="navbar-nav px-3">
             {% if is_granted('ROLE_USER') %}
                 <li class="nav-item text-nowrap border-right border-secondary">
                     <a class="nav-link" href="{{ path('notification_all') }}">
-                        Notifications
+                        {{ 'Notifications'|trans }}
                         <span class="badge badge-light" id="notification-count">
                             <i class="fa fa-circle fa-circle-o-notch fa-spin"></i>
                         </span>
@@ -39,39 +43,41 @@
                 </li>
                 <li class="nav-item text-nowrap">
                     <a class="nav-link"
-                       href="{{ path('security_logout') }}">Sign out</a>
+                       href="{{ logout_path() }}">{{ 'Sign out'|trans }}</a>
                 </li>
             {% else %}
                 <li class="nav-item text-nowrap">
                     <a class="nav-link"
-                       href="{{ path('security_login') }}">Sign in</a>
+                       href="{{ path('security_login') }}">{{ 'Sign in'|trans }}</a>
                 </li>
             {% endif %}
         </ul>
     </div>
 </nav>
+
 <main role="main" class="container">
     <div class="my-3 p-3 bg-white rounded box-shadow">
         {% block body %}
         {% endblock %}
-        <small class="d-block text-right mt-3">
-            <a href="#">All updates</a>
-        </small>
     </div>
-
 </main>
 {% block javascripts %}
     <script src="{{ asset('build/js/app.js') }}"></script>
+
     {% if is_granted('ROLE_USER') %}
     <script>
-
         function fetchNotificationCount() {
-            fetch('{{ path('notification_unread') }}', {'credentials':'include'}).then(function(response){
-               response.json().then(function(data) {
-                   document.getElementById('notification-count').innerText = data['count'];
-                   setInterval(fetchNotificationCount, 5000);
-               }).catch(function(e){console.log('Error: '+e)});
-            }).catch(function(e){console.log('Error: '+e)});
+            fetch(
+                '{{ path('notification_unread') }}',
+                {'credentials': 'include'}
+            ).then(function (response) {
+                response.json().then(function (json) {
+                    document.getElementById('notification-count').innerText = json.count;
+                    setTimeout(fetchNotificationCount, 5000);
+                });
+            }).catch(function (reason) {
+
+            });
         }
 
         fetchNotificationCount();
@@ -80,4 +86,3 @@
 {% endblock %}
 </body>
 </html>
-

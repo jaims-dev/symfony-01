@@ -7,7 +7,9 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        handler_id: ~
+        # handler_id: ~   # tilde char ~ means 'use the default value' (which in this case is file storage
+        # save_path: '%kernel.cache_dir%/sessions'    #this is the default. kernel.cache_dir is specified in kernel.php::getCacheDir
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         cookie_secure: auto
         cookie_samesite: lax
 

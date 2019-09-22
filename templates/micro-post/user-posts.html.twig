@@ -24,7 +24,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">
-                    Followers
+                    {{ 'Followers'|transchoice(user.followers|length) }}
                     <ul class="list-group list-group flush">
                         {% for follower in user.followers %}
                             <li class="list-group-item">
@@ -40,7 +40,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">
-                    Following
+                    {{ 'Following'|transchoice(user.following|length) }}
                     <ul class="list-group list-group flush">
                         {% for following in user.following %}
                             <li class="list-group-item">

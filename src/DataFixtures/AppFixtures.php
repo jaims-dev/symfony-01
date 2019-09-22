@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\MicroPost;
 use App\Entity\User;
+use App\Entity\UserPreferences;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -64,6 +65,11 @@ class AppFixtures extends Fixture
 
     ];
 
+    private const LANGUAGES = [
+        'fr',
+        'en'
+    ];
+
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -111,6 +117,12 @@ class AppFixtures extends Fixture
             $user->setRoles($userData['roles']);
             $user->setEnabled(true);
 
+            $preferences = new UserPreferences();
+            $preferences->setLocale(self::LANGUAGES[rand(0, count(self::LANGUAGES)-1)]);
+
+            // $manager->persist($preferences); we can skip this line if configure @oneToOne in User to cascade = persist
+
+            $user->setPreferences($preferences);
 
             $this->addReference($userData['username'], $user);
 
