@@ -44,6 +44,13 @@ services:
         tags:
             - {name: doctrine.event_subscriber, connection: default}
 
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - 'mysql:dbname=symfony-01' #we dont tneed this
+            - {db_username: homestead, db_password: secret}  #we dont need this since we are using doctrine
+            - !service { class: PDO, factory: 'database_connection:getWrappedConnection' } # doctrine
+            - { lock_mode: 1 }  # to prevent some posssible error while persisting entities 'there is already 1 transaction going on'
+
 #    App\Controller\BlogController: ['@App\Service\Greeting']
 #    App\Service\Greeting: ['@monolog.logger']
 
