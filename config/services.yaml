@@ -51,6 +51,11 @@ services:
             - !service { class: PDO, factory: 'database_connection:getWrappedConnection' } # doctrine
             - { lock_mode: 1 }  # to prevent some posssible error while persisting entities 'there is already 1 transaction going on'
 
+    App\Event\LocaleSubscriber:
+        arguments:
+            - '%kernel.default_locale%' #see translation.yaml
+
+
 #    App\Controller\BlogController: ['@App\Service\Greeting']
 #    App\Service\Greeting: ['@monolog.logger']
 
