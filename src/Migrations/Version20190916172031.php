@@ -29,7 +29,7 @@ final class Version20190916172031 extends AbstractMigration
         $this->addSql('ALTER TABLE post_likes ADD CONSTRAINT FK_DED1C2924B89032C FOREIGN KEY (post_id) REFERENCES micro_post (id)');
         $this->addSql('ALTER TABLE post_likes ADD CONSTRAINT FK_DED1C292A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('DROP INDEX UNIQ_8D93D649F85E0677 ON user');
-        $this->addSql('ALTER TABLE user DROP username');
+        //$this->addSql('ALTER TABLE user DROP username');
     }
 
     public function down(Schema $schema) : void
@@ -39,7 +39,7 @@ final class Version20190916172031 extends AbstractMigration
 
         $this->addSql('DROP TABLE user_user');
         $this->addSql('DROP TABLE post_likes');
-        $this->addSql('ALTER TABLE user ADD username VARCHAR(50) NOT NULL COLLATE utf8mb4_unicode_ci');
+        //$this->addSql('ALTER TABLE user ADD username VARCHAR(50) NOT NULL COLLATE utf8mb4_unicode_ci');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649F85E0677 ON user (username)');
     }
 }
