@@ -55,6 +55,9 @@ services:
         arguments:
             - '%kernel.default_locale%' #see translation.yaml
 
+    App\Event\UserSubscriber:
+        arguments:
+            $defaultLocale: '%kernel.default_locale%' #see translation.yaml
 
 #    App\Controller\BlogController: ['@App\Service\Greeting']
 #    App\Service\Greeting: ['@monolog.logger']
